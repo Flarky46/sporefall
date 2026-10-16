@@ -47,3 +47,16 @@ nav button span{font-size:11px}nav .on{color:#fff;background:#221a35}
 #nodeinfo button{background:#2d2445;color:#eee;border:1px solid #5a4a80;border-radius:10px;padding:12px;font-size:16px;min-height:48px}
 #nodeinfo #nb{background:#7a4bd0}#nodeinfo button:disabled{opacity:.4}
 #frenzy{font-size:18px;z-index:3}
+/* ---- 3D overlay layout ---- */
+#world{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;z-index:0}
+body{display:block;background:#07050d}
+header{position:fixed;top:0;left:0;right:0;z-index:5;pointer-events:none;background:linear-gradient(#07050dcc,#07050d00)}
+#frenzy{position:fixed;top:calc(env(safe-area-inset-top) + 92px);left:0;right:0;text-align:center;z-index:5;pointer-events:none}
+#sheet{position:fixed;left:0;right:0;bottom:0;height:44vh;z-index:6;display:flex;flex-direction:column;background:#120d1ee6;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-radius:18px 18px 0 0;border-top:1px solid #4a3a70;transition:height .25s}
+#sheet.tall{height:78vh}#sheet.mini{height:calc(76px + env(safe-area-inset-bottom))}#sheet.mini main{display:none}
+#handle{background:none;border:0;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+#handle i{width:44px;height:5px;border-radius:3px;background:#6a5a90}
+main{flex:1;position:relative;overflow:hidden}
+.gen{min-height:56px;padding:8px;background:#211a33cc}
+.pop{position:fixed;z-index:8}
+#truffle{z-index:7}

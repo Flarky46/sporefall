@@ -70,11 +70,10 @@ function gain(x){S.nut+=x;S.run+=x;S.total+=x}
 
 // ---- tapping
 function doTap(px,py,auto){let v=tapVal(),c=Math.random()<FX.crit;if(c)v*=FX.critx;gain(v);S.taps++;
- if(!auto){const sh=$('#shroom');sh.classList.add('hit');setTimeout(()=>sh.classList.remove('hit'),60);if(navigator.vibrate&&c)navigator.vibrate(15);}
- pop(px,py,'+'+fmt(v),c);}
-function pop(x,y,t,c){const z=$('#tapzone'),d=document.createElement('div');d.className='pop'+(c?' crit':'');d.textContent=t;const r=z.getBoundingClientRect();
- d.style.left=(x-r.left-20+(Math.random()*30-15))+'px';d.style.top=(y-r.top-20)+'px';z.appendChild(d);setTimeout(()=>d.remove(),900);}
-$('#shroom').addEventListener('pointerdown',ev=>{ev.preventDefault();doTap(ev.clientX,ev.clientY)});
+ if(!auto){if(navigator.vibrate&&c)navigator.vibrate(15);}
+ if(window.S3D)S3D.hit(c,auto);pop(px,py,'+'+fmt(v),c);}
+let popN=0;function pop(x,y,t,c){if(popN>25)return;popN++;const d=document.createElement('div');d.className='pop'+(c?' crit':'');d.textContent=t;
+ d.style.left=(x-20+(Math.random()*30-15))+'px';d.style.top=(y-20)+'px';document.body.appendChild(d);setTimeout(()=>{d.remove();popN--},900);}
 
 // ---- gens UI
 function buildGens(){const g=$('#gens');g.innerHTML='';GENS.forEach((G,i)=>{const d=document.createElement('div');d.className='gen';d.id='g'+i;
@@ -128,11 +127,12 @@ $('#prestige').onclick=()=>{const g=sporeGain();if(g<1)return;if(!confirm(`Sporu
 
 // ---- truffles
 let nextTruffle=Date.now()+30000;
-function spawnTruffle(){const t=$('#truffle');t.style.left=(20+Math.random()*(innerWidth-110))+'px';t.style.top=(140+Math.random()*(innerHeight-300))+'px';t.classList.remove('hide');
+function spawnTruffle(){if(window.S3D)return S3D.spawnTruffle();const t=$('#truffle');t.style.left=(20+Math.random()*(innerWidth-110))+'px';t.style.top=(140+Math.random()*(innerHeight-300))+'px';t.classList.remove('hide');
  clearTimeout(t._h);t._h=setTimeout(()=>t.classList.add('hide'),12000);}
-$('#truffle').addEventListener('pointerdown',e=>{e.preventDefault();const t=$('#truffle');t.classList.add('hide');
+$('#truffle').addEventListener('pointerdown',e=>{e.preventDefault();$('#truffle').classList.add('hide');collectTruffle()});
+function collectTruffle(){
  if(Math.random()<.35){S.frenzyEnd=Date.now()+FX.fdur*1000;toast(`FRENZY! ×7 for ${FX.fdur}s`)}else{const v=Math.max(50,rate()*60*FX.tmul+S.nut*.05);gain(v);toast('Truffle! +'+fmt(v))}
- if(navigator.vibrate)navigator.vibrate([20,30,20]);});
+ if(navigator.vibrate)navigator.vibrate([20,30,20]);}
 
 // ---- misc UI
 let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),1800)}
@@ -158,7 +158,7 @@ function offline(){const dt=Math.min((Date.now()-S.last)/1000,FX.offH*3600);if(d
 const had=load();FX=E();buildGens();offline();
 let lastT=performance.now(),autoAcc=0,uiAcc=0,saveAcc=0;
 function loop(t){const dt=Math.min(1,(t-lastT)/1000);lastT=t;gain(rate()*dt);
- if(FX.auto){autoAcc+=dt*FX.auto;const r=$('#shroom').getBoundingClientRect();while(autoAcc>=1){autoAcc--;doTap(r.left+r.width/2,r.top+r.height/2,1)}}
+ if(FX.auto){autoAcc+=dt*FX.auto;const sp=window.S3D?S3D.shroomScreen():{x:innerWidth/2,y:innerHeight/3};while(autoAcc>=1){autoAcc--;doTap(sp.x,sp.y,1)}}
  if(Date.now()>nextTruffle){spawnTruffle();nextTruffle=Date.now()+(60000+Math.random()*90000)/FX.tfreq}
  uiAcc+=dt;if(uiAcc>.1){uiAcc=0;drawTop();drawGens();if($('#tab-more').classList.contains('on'))drawStats()}
  saveAcc+=dt;if(saveAcc>10){saveAcc=0;save()}requestAnimationFrame(loop)}
@@ -167,4 +167,4 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)save();else
 addEventListener('pagehide',save);
 if(!had)setTimeout(()=>toast('Tap the mushroom! 🍄'),500);
 if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-window.__game={get S(){return S},save,load,E:()=>FX=E()};
+window.__game={get S(){return S},save,load,E:()=>FX=E(),doTap,collectTruffle,buy};

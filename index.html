@@ -4,10 +4,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Sporefall</title><link rel="manifest" href="manifest.json"><link rel="icon" href="icon.svg"><link rel="apple-touch-icon" href="icon-192.png">
 <link rel="stylesheet" href="style.css"></head><body>
-<header id="top"><div id="nut">0</div><div id="rate">0 /s</div><div id="spores"></div></header>
-<main>
+<canvas id="world"></canvas><header id="top"><div id="nut">0</div><div id="rate">0 /s</div><div id="spores"></div></header>
+<div id="frenzy"></div><div id="sheet"><button id="handle" aria-label="toggle panel"><i></i></button><main>
 <section id="tab-grow" class="tab on">
-  <div id="tapzone"><button id="shroom" aria-label="tap">🍄</button><div id="frenzy"></div></div>
   <div id="buymode"><button data-m="1" class="on">x1</button><button data-m="10">x10</button><button data-m="max">Max</button></div>
   <div id="gens"></div>
 </section>
@@ -18,8 +17,8 @@
   <p>Release your spores into the wind. Your Nutrients and producers reset. You gain <b>Spores</b>, which you can spend in the Skill Tree. Every unspent Spore gives <b id="bankpct">+2%</b> production.</p>
   <p class="big">+<span id="pgain">0</span> Spores</p><p id="pnext" class="dim"></p><button id="prestige" class="cta">Sporulate</button></div></section>
 <section id="tab-more" class="tab"><div class="card"><h2>Stats</h2><div id="stats"></div></div>
-  <div class="card"><h2>Save</h2><button id="exp">Export</button><button id="imp">Import</button><button id="wipe" class="danger">Hard reset</button><textarea id="savebox" rows="3"></textarea></div></section>
+  <div class="card"><h2>View</h2><button id="gyro">Gyro look: OFF</button><button id="quality">Quality: Auto</button></div><div class="card"><h2>Save</h2><button id="exp">Export</button><button id="imp">Import</button><button id="wipe" class="danger">Hard reset</button><textarea id="savebox" rows="3"></textarea></div></section>
 </main>
-<nav><button data-t="grow" class="on">🌱<span>Grow</span></button><button data-t="tree">🕸️<span>Tree</span></button><button data-t="prestige">✨<span>Sporulate</span></button><button data-t="more">⚙️<span>More</span></button></nav>
+<nav><button data-t="grow" class="on">🌱<span>Grow</span></button><button data-t="tree">🕸️<span>Tree</span></button><button data-t="prestige">✨<span>Sporulate</span></button><button data-t="more">⚙️<span>More</span></button></nav></div>
 <div id="truffle" class="hide">🟡</div><div id="modal" class="hide"><div class="card" id="modalc"></div></div><div id="toast"></div>
-<script src="game.js"></script></body></html>
+<script src="game.js"></script><script type="module" src="scene.js"></script></body></html>
